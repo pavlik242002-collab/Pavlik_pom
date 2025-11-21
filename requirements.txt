@@ -1,7 +1,7 @@
-aiogram
+aiogram==3.13.1
 python-dotenv
 opencv-python-headless
 aiofiles
-potrace  # Добавь эту строку
-pillow   # Добавь эту
-numpy    # Добавь эту
+pypotrace
+Pillow
+numpy

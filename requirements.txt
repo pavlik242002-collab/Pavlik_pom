@@ -2,4 +2,6 @@ aiogram
 python-dotenv
 opencv-python-headless
 aiofiles
-vectorizer-ai
+potrace  # Добавь эту строку
+pillow   # Добавь эту
+numpy    # Добавь эту

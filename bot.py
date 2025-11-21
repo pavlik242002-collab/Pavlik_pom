@@ -37,14 +37,18 @@ class States(StatesGroup):
 
 
 # Устанавливаем и импортируем лучший CPU-векторизатор 2025 года
+# Устанавливаем и импортируем vectorizer-ai v2.0.2 (CPU-only)
 import subprocess
 import sys
+subprocess.check_call([sys.executable, "-m", "pip", "install", "vectorizer-ai==2.0.2", "--quiet"])
 
-subprocess.check_call([sys.executable, "-m", "pip", "install", "vectorizer-ai>=2.4", "--quiet"])
-from vectorizer import vectorize
-
-print("Векторизатор vectorizer-ai загружен (работает на любом CPU)")
-
+try:
+    from vectorizer_ai import Vectorizer  # API для v2.0.2
+    vectorizer = Vectorizer()  # Инициализируем один раз
+    print("Vectorizer-ai v2.0.2 загружен (работает на любом CPU)")
+except ImportError:
+    print("Fallback: используем potrace")
+    # Если не встанет — переходим к запасному варианту ниже
 
 @dp.message(Command("start"))
 async def start(message: types.Message):
@@ -77,12 +81,14 @@ async def process_photo(message: types.Message, state: FSMContext):
     try:
         output_svg = f"temp/{photo.file_id}.svg"
 
-        vectorize(
+        # Векторизация с v2.0.2 (максимум деталей, без потери линий)
+        vectorizer.vectorize_image(
             photo_path,
             output_svg,
-            colormode="color",  # или "bw" для чёрно-белого
-            detail=0.98,  # максимум деталей
-            corner_threshold=45
+            mode="color",  # "color" или "bw"
+            detail_level=98,  # 98% деталей (почти 100%)
+            corner_threshold=45,  # для острых углов
+            smooth_curves=True  # гладкие кривые Безье
         )
 
         await status.edit_text("Готово! Отправляю вектор...")

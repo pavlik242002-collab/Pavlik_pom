@@ -2,6 +2,6 @@ aiogram==3.13.1
 python-dotenv
 opencv-python-headless
 aiofiles
-pypotrace
+pixels2svg
 Pillow
 numpy
